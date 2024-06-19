@@ -12,7 +12,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "void main() {\n"
     "FragColor = vec4(0.25f, 0.44f, 0.8f, 1.0f);\n"
-    "};";
+    "}";
 
 const unsigned int window_width = 300;
 const unsigned int window_height = 300;
@@ -56,7 +56,7 @@ int main() {
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR FRAGMENT SHADER COMPILATION FAILED\n" << infoLog << std::endl; 
+        std::cout << "ERROR VERTEX SHADER COMPILATION FAILED\n" << infoLog << std::endl; 
     }
 
     //fragment shader creation
@@ -69,7 +69,7 @@ int main() {
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR VERTEX SHADER COMPILATION FAILED\n" << infoLog << std::endl; 
+        std::cout << "ERROR FRAGMENT SHADER COMPILATION FAILED\n" << infoLog << std::endl; 
     }
 
     //shader program creation
