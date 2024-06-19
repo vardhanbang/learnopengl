@@ -95,22 +95,36 @@ int main() {
         0.0f, 0.5, 0.05f
     };
 
-    //vertex buffer object creation and binding
-    unsigned int vertex_buffer_object;
-    glGenBuffers(1, &vertex_buffer_object);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
+    //vertex buffer object initialization
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+
+    //vertex array object creation and binding
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    //vertex buffer object binding
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    //link vertex attributes to currently bound VBO
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     //render loop 
     while(!glfwWindowShouldClose(window)) {
+        //check for esc key
         process_input(window);
 
+        //render
         glClearColor(0.0, 0.9, 0.2, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
