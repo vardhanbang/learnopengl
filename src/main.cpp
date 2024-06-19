@@ -6,6 +6,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow* window);
 
 int main() {
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -24,6 +25,18 @@ int main() {
         std::cout << "Failed to initialize GLAD." << std::endl;
         return -1;
     }
+
+    float vertices[] = {
+        -0.5, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.5, 0.05f
+    };
+
+    unsigned int vertex_buffer_object;
+    glGenBuffers(1, &vertex_buffer_object);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    
     
     while(!glfwWindowShouldClose(window)) {
         process_input(window);
