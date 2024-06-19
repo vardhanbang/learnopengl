@@ -40,19 +40,6 @@ int main() {
         return -1;
     }
 
-    //triangle vertices
-    float vertices[] = {
-        -0.5, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5, 0.05f
-    };
-
-    //vertex buffer object creation and binding
-    unsigned int vertex_buffer_object;
-    glGenBuffers(1, &vertex_buffer_object);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
     //vertex shader creation
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -82,7 +69,35 @@ int main() {
         std::cout << "ERROR VERTEX SHADER COMPILATION FAILED\n" << infoLog << std::endl; 
     }
 
-   //render loop 
+    //shader program creation
+    unsigned int shaderProgram;
+    shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+
+    //shader program linking error check
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if(!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::cout << "ERROR SHADER PROGRAM LINKING FAILED\n" << infoLog << std::endl;
+    }
+
+    //triangle vertices
+    float vertices[] = {
+        -0.5, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.5, 0.05f
+    };
+
+    //vertex buffer object creation and binding
+    unsigned int vertex_buffer_object;
+    glGenBuffers(1, &vertex_buffer_object);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
+    //render loop 
     while(!glfwWindowShouldClose(window)) {
         process_input(window);
 
