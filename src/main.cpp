@@ -12,12 +12,13 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow* window);
 
 int main() {
-
+    //glfw initialization
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    //glfw window creation
     GLFWwindow* window =  glfwCreateWindow(500, 200, "Test Window >:D", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create window." << std::endl;
@@ -25,30 +26,34 @@ int main() {
         return -1;
     }
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); //for resizing
 
+    //glad initialization
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD." << std::endl;
         return -1;
     }
 
+    //triangle vertices
     float vertices[] = {
         -0.5, -0.5f, 0.0f,
         0.5f, -0.5f, 0.0f,
         0.0f, 0.5, 0.05f
     };
 
+    //vertex buffer object creation and binding
     unsigned int vertex_buffer_object;
     glGenBuffers(1, &vertex_buffer_object);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    //vertex shader creation
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
 
-    
+   //render loop 
     while(!glfwWindowShouldClose(window)) {
         process_input(window);
 
