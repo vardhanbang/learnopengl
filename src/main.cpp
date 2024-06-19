@@ -14,6 +14,9 @@ const char* fragmentShaderSource = "#version 330 core\n"
     "FragColor = vec4(0.1f, 0.3f, 0.9f, 1.0f);\n"
     "};";
 
+const unsigned int window_width = 500;
+const unsigned int window_height = 300;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void process_input(GLFWwindow* window);
 
@@ -25,7 +28,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //glfw window creation
-    GLFWwindow* window =  glfwCreateWindow(500, 200, "Test Window >:D", NULL, NULL);
+    GLFWwindow* window =  glfwCreateWindow(window_width, window_height, "Test Window >:D", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create window." << std::endl;
         glfwTerminate();
@@ -112,6 +115,10 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    //OPTIONAL UNBIND VAO AND VBO
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
     //render loop 
     while(!glfwWindowShouldClose(window)) {
         //check for esc key
@@ -122,12 +129,17 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
+        //glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    //OPTIONAL DEALLOCATE VAO ,VBO AND SHADER PROGRAM
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VBO);
+    glDeleteProgram(shaderProgram);
 
     glfwTerminate();
     return 0;
