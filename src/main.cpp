@@ -3,7 +3,7 @@
 #include <iostream>
 
 const char* vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos\n"
+    "layout (location = 0) in vec3 aPos;\n"
     "void main() {\n"
     "gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);\n"
     "}\n";
@@ -52,6 +52,16 @@ int main() {
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
+
+    //vertex shader compile error check
+    int success;
+    char infoLog[512];
+
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if(!success) {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR VERTEX SHADER COMPILATION FAILED\n" << infoLog << std::endl; 
+    }
 
    //render loop 
     while(!glfwWindowShouldClose(window)) {
