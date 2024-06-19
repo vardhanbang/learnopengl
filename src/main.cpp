@@ -11,10 +11,10 @@ const char* vertexShaderSource = "#version 330 core\n"
 const char* fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "void main() {\n"
-    "FragColor = vec4(0.1f, 0.3f, 0.9f, 1.0f);\n"
+    "FragColor = vec4(0.25f, 0.44f, 0.8f, 1.0f);\n"
     "};";
 
-const unsigned int window_width = 500;
+const unsigned int window_width = 300;
 const unsigned int window_height = 300;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -91,25 +91,36 @@ int main() {
     glDeleteShader(fragmentShader);
 
 
-    //triangle vertices
+    //rectangle vertices
     float vertices[] = {
-        -0.5, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5, 0.05f
+        0.5, 0.5f, 0.0f, // 0. top right
+        0.5f, -0.5f, 0.0f, // 1. bottom right
+        -0.5f, -0.5f, 0.0f, // 2. bottom left
+        -0.5f, 0.5f, 0.0f // 3. top left
     };
 
-    //vertex buffer object initialization
-    unsigned int VBO;
+    //draw order for EBO
+    unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    //VBO and EBO initialization
+    unsigned int VBO, EBO;
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
 
     //vertex array object creation and binding
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    //vertex buffer object binding
+    //VBO and EBO binding
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     //link vertex attributes to currently bound VBO
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
@@ -119,18 +130,21 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    //uncomment for wireframe mode
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     //render loop 
     while(!glfwWindowShouldClose(window)) {
         //check for esc key
         process_input(window);
 
         //render
-        glClearColor(0.0, 0.9, 0.2, 1.0);
+        glClearColor(0.3, 0.9, 0.3, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        //glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
